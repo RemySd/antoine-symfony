@@ -1,0 +1,8 @@
+{% for intervenant in intervenants %}
+    <p>ID Intervenant : {{ intervenant.idIntervenant }}</p>
+    <p>ID Utilisateur : {{ intervenant.idUtilisateur }}</p>
+    <p>ID Rôle : {{ intervenant.idRole }}</p>
+    <p>ID Matière : {{ intervenant.idMatiere }}</p>
+    <p>Nombre d'heures : {{ intervenant.nbHeure }}</p>
+    <hr>
+{% endfor %}
