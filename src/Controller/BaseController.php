@@ -10,7 +10,7 @@ class BaseController extends AbstractController
 {
     function pagePrincipale()
     {
-        return new Response('voici la page principale');
+        return new Response('<a class="favorite styled" type="button" href="http://127.0.0.1:8000/produits/affichage-par-mois">Page produit</a>');
     }
 
     /**
