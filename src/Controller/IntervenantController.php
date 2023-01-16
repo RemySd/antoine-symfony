@@ -3,86 +3,76 @@
 namespace App\Controller;
 
 use App\Entity\Intervenant;
+use App\Form\IntervenantType;
+use App\Repository\IntervenantRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+#[Route('/intervenant')]
 class IntervenantController extends AbstractController
 {
-    /**
-     * @Route("/intervenant/create", name="intervenant_create")
-     */
-    public function create(Request $request)
+    #[Route('/', name: 'app_intervenant_index', methods: ['GET'])]
+    public function index(IntervenantRepository $intervenantRepository): Response
+    {
+        return $this->render('intervenant/index.html.twig', [
+            'intervenants' => $intervenantRepository->findAll(),
+        ]);
+    }
+
+    #[Route('/new', name: 'app_intervenant_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, IntervenantRepository $intervenantRepository): Response
     {
         $intervenant = new Intervenant();
-        $intervenant->setIdUtilisateur($request->request->get('id_utilisateur'));
-        $intervenant->setIdRole($request->request->get('id_role'));
-        $intervenant->setIdMatiere($request->request->get('id_matiere'));
-        $intervenant->setNbHeure($request->request->get('nb_heure'));
+        $form = $this->createForm(IntervenantType::class, $intervenant);
+        $form->handleRequest($request);
 
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($intervenant);
-        $entityManager->flush();
+        if ($form->isSubmitted() && $form->isValid()) {
+            $intervenantRepository->save($intervenant, true);
 
-        return new Response('Intervenant créé avec l\'ID '.$intervenant->getIdIntervenant());
-    }
-
-    /**
-     * @Route("/intervenant/read", name="intervenant_read")
-     */
-    public function read()
-    {
-        $intervenants = $this->getDoctrine()->getRepository(Intervenant::class)->findAll();
-
-        return $this->render('intervenant/read.html.twig', array('intervenants' => $intervenants));
-    }
-
-    /**
-     * @Route("/intervenant/update/{id}", name="intervenant_update")
-     */
-    public function update(Request $request, $id)
-    {
-        $entityManager = $this->getDoctrine()->getManager();
-        $intervenant = $entityManager->getRepository(Intervenant::class)->find($id);
-
-        if (!$intervenant) {
-            throw $this->createNotFoundException(
-                'Aucun intervenant trouvé avec l\'ID ' . $id
-            );
+            return $this->redirectToRoute('app_intervenant_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        $intervenant->setIdUtilisateur($request->request->get('id_utilisateur'));
-        $intervenant->setIdRole($request->request->get('id_role'));
-        $intervenant->setIdMatiere($request->request->get('id_matiere'));
-        $intervenant->setNbHeure($request->request->get('nb_heure'));
-
-        $entityManager->flush();
-
-        return $this->redirectToRoute('intervenant_read');
+        return $this->renderForm('intervenant/new.html.twig', [
+            'intervenant' => $intervenant,
+            'form' => $form,
+        ]);
     }
 
-    /**
-     * @Route("/intervenant/delete/{id}", name="intervenant_delete")
-     */
-    public function delete($id)
+    #[Route('/{id}', name: 'app_intervenant_show', methods: ['GET'])]
+    public function show(Intervenant $intervenant): Response
     {
-        $entityManager = $this->getDoctrine()->getManager();
-        $intervenant = $entityManager->getRepository(Intervenant::class)->find($id);
+        return $this->render('intervenant/show.html.twig', [
+            'intervenant' => $intervenant,
+        ]);
+    }
 
-        if (!$intervenant) {
-            throw $this->createNotFoundException(
-                'Aucun intervenant trouvé avec l\'ID '.$id
-            );
+    #[Route('/{id}/edit', name: 'app_intervenant_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, Intervenant $intervenant, IntervenantRepository $intervenantRepository): Response
+    {
+        $form = $this->createForm(IntervenantType::class, $intervenant);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $intervenantRepository->save($intervenant, true);
+
+            return $this->redirectToRoute('app_intervenant_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        $entityManager->remove($intervenant);
-        $entityManager->flush();
-
-        return $this->redirectToRoute('intervenant_read');
+        return $this->renderForm('intervenant/edit.html.twig', [
+            'intervenant' => $intervenant,
+            'form' => $form,
+        ]);
     }
 
+    #[Route('/{id}', name: 'app_intervenant_delete', methods: ['POST'])]
+    public function delete(Request $request, Intervenant $intervenant, IntervenantRepository $intervenantRepository): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$intervenant->getId(), $request->request->get('_token'))) {
+            $intervenantRepository->remove($intervenant, true);
+        }
+
+        return $this->redirectToRoute('app_intervenant_index', [], Response::HTTP_SEE_OTHER);
+    }
 }
-
-
-

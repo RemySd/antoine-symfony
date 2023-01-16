@@ -2,101 +2,77 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Cours;
+use App\Form\CoursType;
+use App\Repository\CoursRepository;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Routing\Annotation\Route;
 
+#[Route('/cours')]
 class CoursController extends AbstractController
 {
-    /**
-     * @Route("/cours/create")
-     */
-    public function create(EntityManagerInterface $entityManager)
+    #[Route('/', name: 'app_cours_index', methods: ['GET'])]
+    public function index(CoursRepository $coursRepository): Response
     {
-        // Créez un nouvel objet Cours
-        $cours = new Cours();
-        $cours->setIdCalendrier(1);
-        $cours->setIdMatiere(1);
-        $cours->setIdIntervenant(1);
-        $cours->setDateHeureCourDebut(new \DateTime('2022-09-01 09:00:00'));
-        $cours->setDateHeureCourFin(new \DateTime('2022-09-01 10:30:00'));
-
-        // Enregistrez l'objet Cours en base de données
-        $entityManager->persist($cours);
-        $entityManager->flush();
-
-        return new Response('Cours créé avec l\'ID ' . $cours->getIdCours());
+        return $this->render('cours/index.html.twig', [
+            'cours' => $coursRepository->findAll(),
+        ]);
     }
 
-    /**
-     * @Route("/cours/{id}", requirements={"id"="\d+"})
-     */
-    public function read($id)
+    #[Route('/new', name: 'app_cours_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, CoursRepository $coursRepository): Response
     {
-        // Récupérez l'objet Cours en base de données à l'aide de l'ID
-        $cours = $this->getDoctrine()
-            ->getRepository(Cours::class)
-            ->find($id);
+        $cour = new Cours();
+        $form = $this->createForm(CoursType::class, $cour);
+        $form->handleRequest($request);
 
-        if (!$cours) {
-            throw $this->createNotFoundException(
-                'Aucun cours trouvé avec l\'ID ' . $id
-            );
+        if ($form->isSubmitted() && $form->isValid()) {
+            $coursRepository->save($cour, true);
+
+            return $this->redirectToRoute('app_cours_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return new Response('Cours trouvé : ' . $cours->getIdMatiere() . ' donné par ' . $cours->getIdIntervenant() . ' le ' . $cours->getDateHeureCourDebut()->format('d/m/Y à H:i') . ' au ' . $cours->getDateHeureCourFin()->format('H:i'));
+        return $this->renderForm('cours/new.html.twig', [
+            'cour' => $cour,
+            'form' => $form,
+        ]);
     }
 
-    /**
-     * @Route("/cours/update/{id}", requirements={"id"="\d+"})
-     */
-    public function update($id, EntityManagerInterface $entityManager)
+    #[Route('/{id}', name: 'app_cours_show', methods: ['GET'])]
+    public function show(Cours $cour): Response
     {
-        // Récupérez l'objet Cours en base de données à l'aide de l'ID
-        $cours = $this->getDoctrine()
-            ->getRepository(Cours::class)
-            ->find($id);
-
-        if (!$cours) {
-            throw $this->createNotFoundException(
-                'Aucun cours trouvé avec l\'ID '.$id
-            );
-        }
-
-        // Modifiez les données de l'objet Cours
-        $cours->setIdMatiere(2);
-        $cours->setIdIntervenant(2);
-        $cours->setDateHeureCourDebut(new \DateTime('2022-09-02 09:00:00'));
-        $cours->setDateHeureCourFin(new \DateTime('2022-09-02 10:30:00'));
-
-        // Enregistrez les modifications en base de données
-        $entityManager->flush();
-
-        return new Response('Cours mis à jour avec l\'ID '.$cours->getIdCours());
+        return $this->render('cours/show.html.twig', [
+            'cour' => $cour,
+        ]);
     }
 
-    /**
-     * @Route("/cours/delete/{id}", requirements={"id"="\d+"})
-     */
-    public function delete($id, EntityManagerInterface $entityManager)
+    #[Route('/{id}/edit', name: 'app_cours_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, Cours $cour, CoursRepository $coursRepository): Response
     {
-        // Récupérez l'objet Cours en base de données à l'aide de l'ID
-        $cours = $this->getDoctrine()
-            ->getRepository(Cours::class)
-            ->find($id);
+        $form = $this->createForm(CoursType::class, $cour);
+        $form->handleRequest($request);
 
-        if (!$cours) {
-            throw $this->createNotFoundException(
-                'Aucun cours trouvé avec l\'ID '.$id
-            );
+        if ($form->isSubmitted() && $form->isValid()) {
+            $coursRepository->save($cour, true);
+
+            return $this->redirectToRoute('app_cours_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        // Supprimez l'objet Cours de la base de données
-        $entityManager->remove($cours);
-        $entityManager->flush();
+        return $this->renderForm('cours/edit.html.twig', [
+            'cour' => $cour,
+            'form' => $form,
+        ]);
+    }
 
-        return new Response('Cours supprimé avec l\'ID '.$id);
+    #[Route('/{id}', name: 'app_cours_delete', methods: ['POST'])]
+    public function delete(Request $request, Cours $cour, CoursRepository $coursRepository): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$cour->getId(), $request->request->get('_token'))) {
+            $coursRepository->remove($cour, true);
+        }
+
+        return $this->redirectToRoute('app_cours_index', [], Response::HTTP_SEE_OTHER);
     }
 }

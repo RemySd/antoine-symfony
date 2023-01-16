@@ -2,100 +2,77 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Matiere;
+use App\Form\MatiereType;
+use App\Repository\MatiereRepository;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Routing\Annotation\Route;
 
+#[Route('/matiere')]
 class MatiereController extends AbstractController
 {
-    /**
-     * @Route("/matiere/create")
-     */
-    public function create(EntityManagerInterface $entityManager)
+    #[Route('/', name: 'app_matiere_index', methods: ['GET'])]
+    public function index(MatiereRepository $matiereRepository): Response
     {
-        // Créez un nouvel objet Matière
+        return $this->render('matiere/index.html.twig', [
+            'matieres' => $matiereRepository->findAll(),
+        ]);
+    }
+
+    #[Route('/new', name: 'app_matiere_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, MatiereRepository $matiereRepository): Response
+    {
         $matiere = new Matiere();
-        $matiere->setLibelleMatiere('Mathématiques');
-        $matiere->setSpecialite('Informatique');
+        $form = $this->createForm(MatiereType::class, $matiere);
+        $form->handleRequest($request);
 
-        // Enregistrez l'objet Matière en base de données
-        $entityManager->persist($matiere);
-        $entityManager->flush();
+        if ($form->isSubmitted() && $form->isValid()) {
+            $matiereRepository->save($matiere, true);
 
-        return new Response('Matière créée avec l\'ID ' . $matiere->getIdMatiere());
-    }
-
-    /**
-     * @Route("/matiere/{id}", requirements={"id"="\d+"})
-     */
-    public function read($id)
-    {
-        // Récupérez l'objet Matière en base de données à l'aide de l'ID
-        $matiere = $this->getDoctrine()
-            ->getRepository(Matiere::class)
-            ->find($id);
-
-        if (!$matiere) {
-            throw $this->createNotFoundException(
-                'Aucune matière trouvée avec l\'ID ' . $id
-            );
+            return $this->redirectToRoute('app_matiere_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return new Response('Matière trouvée : ' . $matiere->getLibelleMatiere() . ' (spécialité ' . $matiere->getSpecialite() . ')');
+        return $this->renderForm('matiere/new.html.twig', [
+            'matiere' => $matiere,
+            'form' => $form,
+        ]);
     }
 
-    /**
-     * @Route("/matiere/update/{id}", requirements={"id"="\d+"})
-     */
-    public function update($id, EntityManagerInterface $entityManager)
+    #[Route('/{id}', name: 'app_matiere_show', methods: ['GET'])]
+    public function show(Matiere $matiere): Response
     {
-        // Récupérez l'objet Matière en base de données à l'aide de l'ID
-        $matiere = $this->getDoctrine()
-            ->getRepository(Matiere::class)
-            ->find($id);
-
-        if (!$matiere) {
-            throw $this->createNotFoundException(
-                'Aucune matière trouvée avec l\'ID '.$id
-            );
-        }
-
-        // Modifiez les données de l'objet Matière
-        $matiere->setLibelleMatiere('Physique');
-        $matiere->setSpecialite('Chimie');
-
-        // Enregistrez les modifications en base de données
-        $entityManager->flush();
-
-        return new Response('Matière mise à jour avec l\'ID '.$matiere->getIdMatiere());
+        return $this->render('matiere/show.html.twig', [
+            'matiere' => $matiere,
+        ]);
     }
 
-    /**
-     * @Route("/matiere/delete/{id}", requirements={"id"="\d+"})
-     */
-    public function delete($id, EntityManagerInterface $entityManager)
+    #[Route('/{id}/edit', name: 'app_matiere_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, Matiere $matiere, MatiereRepository $matiereRepository): Response
     {
-        // Récupérez l'objet Matière en base de données à l'aide de l'ID
-        $matiere = $this->getDoctrine()
-            ->getRepository(Matiere::class)
-            ->find($id);
+        $form = $this->createForm(MatiereType::class, $matiere);
+        $form->handleRequest($request);
 
-        if (!$matiere) {
-            throw $this->createNotFoundException(
-                'Aucune matière trouvée avec l\'ID '.$id
-            );
+        if ($form->isSubmitted() && $form->isValid()) {
+            $matiereRepository->save($matiere, true);
+
+            return $this->redirectToRoute('app_matiere_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        // Supprimez l'objet Matière de la base de données
-        $entityManager->remove($matiere);
-        $entityManager->flush();
+        return $this->renderForm('matiere/edit.html.twig', [
+            'matiere' => $matiere,
+            'form' => $form,
+        ]);
+    }
 
-        return new Response('Matière supprimée avec l\'ID '.$id);
+    #[Route('/{id}', name: 'app_matiere_delete', methods: ['POST'])]
+    public function delete(Request $request, Matiere $matiere, MatiereRepository $matiereRepository): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$matiere->getId(), $request->request->get('_token'))) {
+            $matiereRepository->remove($matiere, true);
+        }
+
+        return $this->redirectToRoute('app_matiere_index', [], Response::HTTP_SEE_OTHER);
     }
 }
-
-
-
-

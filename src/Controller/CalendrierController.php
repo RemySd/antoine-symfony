@@ -2,97 +2,77 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Calendrier;
+use App\Form\CalendrierType;
+use App\Repository\CalendrierRepository;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Routing\Annotation\Route;
 
+#[Route('/calendrier')]
 class CalendrierController extends AbstractController
 {
-    /**
-     * @Route("/calendrier/create")
-     */
-    public function create(EntityManagerInterface $entityManager)
+    #[Route('/', name: 'app_calendrier_index', methods: ['GET'])]
+    public function index(CalendrierRepository $calendrierRepository): Response
     {
-        // Créez un nouvel objet Calendrier
+        return $this->render('calendrier/index.html.twig', [
+            'calendriers' => $calendrierRepository->findAll(),
+        ]);
+    }
+
+    #[Route('/new', name: 'app_calendrier_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, CalendrierRepository $calendrierRepository): Response
+    {
         $calendrier = new Calendrier();
-        $calendrier->setLibellePeriode('Trimestre 1');
-        $calendrier->setDateDebut(new \DateTime('2022-09-01'));
-        $calendrier->setDateFin(new \DateTime('2022-12-31'));
+        $form = $this->createForm(CalendrierType::class, $calendrier);
+        $form->handleRequest($request);
 
-        // Enregistrez l'objet Calendrier en base de données
-        $entityManager->persist($calendrier);
-        $entityManager->flush();
+        if ($form->isSubmitted() && $form->isValid()) {
+            $calendrierRepository->save($calendrier, true);
 
-        return new Response('Calendrier créé avec l\'ID ' . $calendrier->getIdCalendrier());
-    }
-
-    /**
-     * @Route("/calendrier/{id}", requirements={"id"="\d+"})
-     */
-    public function read($id)
-    {
-        // Récupérez l'objet Calendrier en base de données à l'aide de l'ID
-        $calendrier = $this->getDoctrine()
-            ->getRepository(Calendrier::class)
-            ->find($id);
-
-        if (!$calendrier) {
-            throw $this->createNotFoundException(
-                'Aucun calendrier trouvé avec l\'ID ' . $id
-            );
+            return $this->redirectToRoute('app_calendrier_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return new Response('Calendrier trouvé : ' . $calendrier->getLibellePeriode() . ' du ' . $calendrier->getDateDebut()->format('d/m/Y') . ' au ' . $calendrier->getDateFin()->format('d/m/Y'));
+        return $this->renderForm('calendrier/new.html.twig', [
+            'calendrier' => $calendrier,
+            'form' => $form,
+        ]);
     }
 
-    /**
-     * @Route("/calendrier/update/{id}", requirements={"id"="\d+"})
-     */
-    public function update($id, EntityManagerInterface $entityManager)
+    #[Route('/{id}', name: 'app_calendrier_show', methods: ['GET'])]
+    public function show(Calendrier $calendrier): Response
     {
-        // Récupérez l'objet Calendrier en base de données à l'aide de l'ID
-        $calendrier = $this->getDoctrine()
-            ->getRepository(Calendrier::class)
-            ->find($id);
-
-        if (!$calendrier) {
-            throw $this->createNotFoundException(
-                'Aucun calendrier trouvé avec l\'ID ' . $id
-            );
-        }
-        // Modifiez les données de l'objet Calendrier
-        $calendrier->setLibellePeriode('Trimestre 2');
-        $calendrier->setDateDebut(new \DateTime('2022-01-01'));
-        $calendrier->setDateFin(new \DateTime('2022-03-31'));
-
-        // Enregistrez les modifications en base de données
-        $entityManager->flush();
-
-        return new Response('Calendrier mis à jour avec l\'ID ' . $calendrier->getIdCalendrier());
+        return $this->render('calendrier/show.html.twig', [
+            'calendrier' => $calendrier,
+        ]);
     }
 
-    /**
-     * @Route("/calendrier/delete/{id}", requirements={"id"="\d+"})
-     */
-    public function delete($id, EntityManagerInterface $entityManager)
+    #[Route('/{id}/edit', name: 'app_calendrier_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, Calendrier $calendrier, CalendrierRepository $calendrierRepository): Response
     {
-        // Récupérez l'objet Calendrier en base de données à l'aide de l'ID
-        $calendrier = $this->getDoctrine()
-            ->getRepository(Calendrier::class)
-            ->find($id);
+        $form = $this->createForm(CalendrierType::class, $calendrier);
+        $form->handleRequest($request);
 
-        if (!$calendrier) {
-            throw $this->createNotFoundException(
-                'Aucun calendrier trouvé avec l\'ID '.$id
-            );
+        if ($form->isSubmitted() && $form->isValid()) {
+            $calendrierRepository->save($calendrier, true);
+
+            return $this->redirectToRoute('app_calendrier_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        // Supprimez l'objet Calendrier de la base de données
-        $entityManager->remove($calendrier);
-        $entityManager->flush();
+        return $this->renderForm('calendrier/edit.html.twig', [
+            'calendrier' => $calendrier,
+            'form' => $form,
+        ]);
+    }
 
-        return new Response('Calendrier supprimé avec l\'ID '.$id);
+    #[Route('/{id}', name: 'app_calendrier_delete', methods: ['POST'])]
+    public function delete(Request $request, Calendrier $calendrier, CalendrierRepository $calendrierRepository): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$calendrier->getId(), $request->request->get('_token'))) {
+            $calendrierRepository->remove($calendrier, true);
+        }
+
+        return $this->redirectToRoute('app_calendrier_index', [], Response::HTTP_SEE_OTHER);
     }
 }

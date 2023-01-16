@@ -2,98 +2,77 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Utilisateur;
+use App\Form\UtilisateurType;
+use App\Repository\UtilisateurRepository;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Routing\Annotation\Route;
 
+#[Route('/utilisateur')]
 class UtilisateurController extends AbstractController
 {
-    /**
-     * @Route("/utilisateur/create")
-     */
-    public function create(EntityManagerInterface $entityManager)
+    #[Route('/', name: 'app_utilisateur_index', methods: ['GET'])]
+    public function index(UtilisateurRepository $utilisateurRepository): Response
     {
-        // Créez un nouvel objet Utilisateur
+        return $this->render('utilisateur/index.html.twig', [
+            'utilisateurs' => $utilisateurRepository->findAll(),
+        ]);
+    }
+
+    #[Route('/new', name: 'app_utilisateur_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, UtilisateurRepository $utilisateurRepository): Response
+    {
         $utilisateur = new Utilisateur();
-        $utilisateur->setNom('John');
-        $utilisateur->setPrenom('Doe');
-        $utilisateur->setIdRole(1);
+        $form = $this->createForm(UtilisateurType::class, $utilisateur);
+        $form->handleRequest($request);
 
-        // Enregistrez l'objet Utilisateur en base de données
-        $entityManager->persist($utilisateur);
-        $entityManager->flush();
+        if ($form->isSubmitted() && $form->isValid()) {
+            $utilisateurRepository->save($utilisateur, true);
 
-        return new Response('Utilisateur créé avec l\'ID ' . $utilisateur->getIdUtilisateur());
-    }
-
-    /**
-     * @Route("/utilisateur/{id}", requirements={"id"="\d+"})
-     */
-    public function read($id)
-    {
-        // Récupérez l'objet Utilisateur en base de données à l'aide de l'ID
-        $utilisateur = $this->getDoctrine()
-            ->getRepository(Utilisateur::class)
-            ->find($id);
-
-        if (!$utilisateur) {
-            throw $this->createNotFoundException(
-                'Aucun utilisateur trouvé avec l\'ID ' . $id
-            );
+            return $this->redirectToRoute('app_utilisateur_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return new Response('Utilisateur trouvé : ' . $utilisateur->getNom() . ' ' . $utilisateur->getPrenom());
+        return $this->renderForm('utilisateur/new.html.twig', [
+            'utilisateur' => $utilisateur,
+            'form' => $form,
+        ]);
     }
 
-    /**
-     * @Route("/utilisateur/update/{id}", requirements={"id"="\d+"})
-     */
-    public function update($id, EntityManagerInterface $entityManager)
+    #[Route('/{id}', name: 'app_utilisateur_show', methods: ['GET'])]
+    public function show(Utilisateur $utilisateur): Response
     {
-        // Récupérez l'objet Utilisateur en base de données à l'aide de l'ID
-        $utilisateur = $this->getDoctrine()
-            ->getRepository(Utilisateur::class)
-            ->find($id);
-
-        if (!$utilisateur) {
-            throw $this->createNotFoundException(
-                'Aucun utilisateur trouvé avec l\'ID ' . $id
-            );
-        }
-
-        // Modifiez les données de l'objet Utilisateur
-        $utilisateur->setNom('Jane');
-        $utilisateur->setPrenom('Doe');
-        $utilisateur->setIdRole(2);
-
-        // Enregistrez les modifications en base de données
-        $entityManager->flush();
-
-        return new Response('Utilisateur mis à jour avec l\'ID ' . $utilisateur->getIdUtilisateur());
+        return $this->render('utilisateur/show.html.twig', [
+            'utilisateur' => $utilisateur,
+        ]);
     }
 
-    /**
-     * @Route("/utilisateur/delete/{id}", requirements={"id"="\d+"})
-     */
-    public function delete($id, EntityManagerInterface $entityManager)
+    #[Route('/{id}/edit', name: 'app_utilisateur_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, Utilisateur $utilisateur, UtilisateurRepository $utilisateurRepository): Response
     {
-        // Récupérez l'objet Utilisateur en base de données à l'aide de l'ID
-        $utilisateur = $this->getDoctrine()
-            ->getRepository(Utilisateur::class)
-            ->find($id);
+        $form = $this->createForm(UtilisateurType::class, $utilisateur);
+        $form->handleRequest($request);
 
-        if (!$utilisateur) {
-            throw $this->createNotFoundException(
-                'Aucun utilisateur trouvé avec l\'ID '.$id
-            );
+        if ($form->isSubmitted() && $form->isValid()) {
+            $utilisateurRepository->save($utilisateur, true);
+
+            return $this->redirectToRoute('app_utilisateur_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        // Supprimez l'objet Utilisateur de la base de données
-        $entityManager->remove($utilisateur);
-        $entityManager->flush();
+        return $this->renderForm('utilisateur/edit.html.twig', [
+            'utilisateur' => $utilisateur,
+            'form' => $form,
+        ]);
+    }
 
-        return new Response('Utilisateur supprimé avec l\'ID '.$id);
+    #[Route('/{id}', name: 'app_utilisateur_delete', methods: ['POST'])]
+    public function delete(Request $request, Utilisateur $utilisateur, UtilisateurRepository $utilisateurRepository): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$utilisateur->getId(), $request->request->get('_token'))) {
+            $utilisateurRepository->remove($utilisateur, true);
+        }
+
+        return $this->redirectToRoute('app_utilisateur_index', [], Response::HTTP_SEE_OTHER);
     }
 }
