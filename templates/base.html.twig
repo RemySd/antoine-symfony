@@ -3,13 +3,14 @@
 
 <head>
     <title>{% block title %}Gestion de planning{% endblock %}</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/6.0.2/index.global.min.js" integrity="sha512-Oh8TxU+uqKYsmHku33fGrSDbZyN+2U3w/MJSWlnCnpHVzIJSczqx6XxAYjS2zAXCfnH1+YXwwD6BnagxPizYAA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/font-awesome.css">
+    <link rel="stylesheet" href="/css/styles.css">
     {% block stylesheets %}
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
-        <link rel="stylesheet" href="/css/font-awesome.css">
-        <link rel="stylesheet" href="/css/styles.css">
     {% endblock %}
 </head>
 
@@ -22,7 +23,7 @@
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-                <a style="color: #fff;" class="nav-link" href="#">Récapitulatif</a>
+                <a{%  block nav_modif%} style="color: #fff;" class="nav-link" href="#">Récapitulatif {% endblock %}</a>
             </li>
             <li class="nav-item">
                 <a style="color: #fff;" class="nav-link" href="#">Intervenants</a>

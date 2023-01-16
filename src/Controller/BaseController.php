@@ -30,5 +30,27 @@ class BaseController extends AbstractController
         ]);
         //ucwords = upper case words
     }
+    /**
+     * @Route ("/calendrier/{id}")
+     */
+    function showCalendar()
+    {
+        $dateYear = date('Y');
+        $annee = new \DateTime($dateYear.'-08-31');
+        $annee ->modify('first monday');
+
+        $datenextYear= date('Y', strtotime('+1 year'));
+        $annee_suivante=new \DateTime($datenextYear.'-08-31');
+        $annee_suivante ->modify('first monday');
+
+        $tableau_semaines=[$annee->format('Y-m-d')];
+        while ($annee<$annee_suivante)
+        {
+            $tableau_semaines[]=$annee->modify('next monday')->format('Y-m-d');
+        }
+        array_pop($tableau_semaines);
+        dump($tableau_semaines);
+        return $this->render("calendrier.html.twig");
+    }
 
 }
