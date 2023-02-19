@@ -50,7 +50,7 @@ class BaseController extends AbstractController
         }
         array_pop($tableau_semaines);
         dump($tableau_semaines);
-        return $this->render("calendrier.html.twig");
+        return $this->render("calendrier.html.twig",["tableauSemaines"=>$tableau_semaines]);
     }
 
 }
