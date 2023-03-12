@@ -31,16 +31,15 @@ class BaseController extends AbstractController
         //ucwords = upper case words
     }
     /**
-     * @Route ("/calendrier/{id}")
+     * @Route ("/calendrier/{year}",name="calendrier")
      */
-    function showCalendar()
+    function showCalendar($year)
     {
-        $dateYear = date('Y');
-        $annee = new \DateTime($dateYear.'-08-31');
+        $annee = new \DateTime($year.'-08-31');
         $annee ->modify('first monday');
 
-        $datenextYear= date('Y', strtotime('+1 year'));
-        $annee_suivante=new \DateTime($datenextYear.'-08-31');
+
+        $annee_suivante=new \DateTime(($year+1).'-08-31');
         $annee_suivante ->modify('first monday');
 
         $tableau_semaines=[$annee->format('Y-m-d')];
