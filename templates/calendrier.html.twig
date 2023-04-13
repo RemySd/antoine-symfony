@@ -11,6 +11,7 @@
         <div class="semaine" id="semaine{{ key }}" data-semaine="{{semaine}}"></div>
     {% endfor %}
     </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var semaines=document.querySelectorAll("[data-semaine]");
@@ -48,21 +49,25 @@
                         allDay: false // will make the time show
                     });
 
-                    let customPopover = new bootstrap.Popover(info.jsEvent.target, {
-                        placement: 'right',
-                        content: 'x',
-                        html: true,
-                        sanitize: false,
-                        template: '<div class="popover" role="popover" style="padding: 20px;"><p>test</p><select name="pets" id="pet-select"><option value="dog">Dog</option><option value="cat">Cat</option></select><button>valider</button></div>'
-                    });
-                    customPopover.show();
+                    fetch('https://127.0.0.1:8000/get-cours-infos')
+                        .then((response) => response.text())
+                        .then((html) => {
+                            let customPopover = new bootstrap.Popover(info.jsEvent.target, {
+                            placement: 'right',
+                            content: 'x',
+                            html: true,
+                            sanitize: false,
+                            template: html
+                        });
+                        customPopover.show();
+                        
+                        });
                     isOnSelect = true;
+                    
                 },
-
-
             });
             var calendar_buttons={};
-            var all_buttons=""
+            var all_buttons="";
 
             for (var i=0;i<semaines.length;i++)
             {
@@ -71,7 +76,6 @@
                     text: i.toString(),
                     click: (event, htmlElement) => {
                         calendar.gotoDate(document.getElementById("semaine" + htmlElement.title).dataset.semaine);
-
                     }
                 }
             }
@@ -88,17 +92,12 @@
                     
                     data.forEach((element) => {
                         var dateDebut = new Date(element.dateDebut);
-
-                        // Mettre les minutes et les secondes à 0
                         dateDebut.setHours(0);
                         dateDebut.setMinutes(0);
                         dateDebut.setSeconds(0);
 
-                        // Convertir la date en chaîne de caractères au format ISO 8601
                         var newDateDebut = dateDebut.toISOString();
-
                         var dateString = newDateDebut;
-
                         var date = new Date(dateString);
                         date.setDate(date.getDate() + 5);
                         var newDateString = date.toISOString();
@@ -109,7 +108,6 @@
                             end: newDateString,
                             allDay: false // will make the time show
                         });
-
                     });
                 });
 
@@ -119,7 +117,6 @@
                     isOnSelect = false;
                     return;
                 }
-
 
                 if (!event.target.closest('.popover')) {
                     const popovers = document.querySelectorAll('.popover');

@@ -2,10 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\IntervenantRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\IntervenantRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Ignore;
 
 #[ORM\Entity(repositoryClass: IntervenantRepository::class)]
 class Intervenant
@@ -19,9 +20,11 @@ class Intervenant
     private ?int $nb_heure = null;
 
     #[ORM\OneToMany(mappedBy: 'intervenant', targetEntity: Cours::class)]
+    #[Ignore]
     private Collection $cours;
 
     #[ORM\OneToMany(mappedBy: 'intervenant', targetEntity: Matiere::class)]
+    #[Ignore]
     private Collection $matieres;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]

@@ -6,6 +6,7 @@ use App\Repository\MatiereRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Ignore;
 
 #[ORM\Entity(repositoryClass: MatiereRepository::class)]
 class Matiere
@@ -19,10 +20,12 @@ class Matiere
     private ?string $specialite = null;
 
     #[ORM\OneToMany(mappedBy: 'id_matiere', targetEntity: Cours::class)]
+    #[Ignore]
     private Collection $cours;
 
     #[ORM\ManyToOne(inversedBy: 'matieres')]
     #[ORM\JoinColumn(nullable: false,name: 'id_intervenant', referencedColumnName:'id_intervenant')]
+    #[Ignore]
     private ?Intervenant $intervenant = null;
 
     #[ORM\Column(length: 255)]
