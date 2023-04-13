@@ -2,15 +2,21 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Entity\Intervenant;
-use App\Form\IntervenantType;
+use App\Form\IntervenantFormType;
+use App\Form\RegistrationFormType;
+use App\Security\AppCustomAuthenticator;
+use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\IntervenantRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 
-#[Route('/intervenant')]
+#[Route('/admin/intervenant')]
 class IntervenantController extends AbstractController
 {
     #[Route('/', name: 'app_intervenant_index', methods: ['GET'])]
@@ -22,25 +28,40 @@ class IntervenantController extends AbstractController
     }
 
     #[Route('/new', name: 'app_intervenant_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, IntervenantRepository $intervenantRepository): Response
-    {
-        $intervenant = new Intervenant();
-        $form = $this->createForm(IntervenantType::class, $intervenant);
+    public function new(
+        Request $request,
+        UserPasswordHasherInterface $userPasswordHasher,
+        EntityManagerInterface $entityManager
+    ): Response {
+        $user = new User();
+        $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $intervenantRepository->save($intervenant, true);
+            // encode the plain password
+            $user->setPassword(
+                $userPasswordHasher->hashPassword(
+                    $user,
+                    $form->get('plainPassword')->getData()
+                )
+            );
+
+            $intervenant = new Intervenant();
+            $intervenant->setUser($user);
+
+            $entityManager->persist($user);
+            $entityManager->persist($intervenant);
+            $entityManager->flush();
 
             return $this->redirectToRoute('app_intervenant_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('intervenant/new.html.twig', [
-            'intervenant' => $intervenant,
-            'form' => $form,
+        return $this->render('registration/register.html.twig', [
+            'registrationForm' => $form->createView(),
         ]);
     }
 
-    #[Route('/{id}', name: 'app_intervenant_show', methods: ['GET'])]
+    #[Route('/{id_intervenant}', name: 'app_intervenant_show', methods: ['GET'])]
     public function show(Intervenant $intervenant): Response
     {
         return $this->render('intervenant/show.html.twig', [
@@ -48,10 +69,10 @@ class IntervenantController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_intervenant_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id_intervenant}/edit', name: 'app_intervenant_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Intervenant $intervenant, IntervenantRepository $intervenantRepository): Response
     {
-        $form = $this->createForm(IntervenantType::class, $intervenant);
+        $form = $this->createForm(Intervenant1Type::class, $intervenant);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -66,10 +87,10 @@ class IntervenantController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_intervenant_delete', methods: ['POST'])]
+    #[Route('/{id_intervenant}', name: 'app_intervenant_delete', methods: ['POST'])]
     public function delete(Request $request, Intervenant $intervenant, IntervenantRepository $intervenantRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$intervenant->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $intervenant->getId_intervenant(), $request->request->get('_token'))) {
             $intervenantRepository->remove($intervenant, true);
         }
 

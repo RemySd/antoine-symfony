@@ -8,9 +8,12 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class BaseController extends AbstractController
 {
-    function pagePrincipale()
+    /**
+     * @Route ("/", name="homepage")
+     */
+    public function home()
     {
-        return new Response('<a class="favorite styled" type="button" href="http://127.0.0.1:8000/produits/affichage-par-mois">Page produit</a>');
+        return $this->render('home/index.html.twig');
     }
 
     /**

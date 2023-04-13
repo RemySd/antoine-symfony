@@ -8,24 +8,8 @@
     <table class="table">
         <tbody>
             <tr>
-                <th>Id</th>
-                <td>{{ intervenant.id }}</td>
-            </tr>
-            <tr>
                 <th>Id_intervenant</th>
                 <td>{{ intervenant.idIntervenant }}</td>
-            </tr>
-            <tr>
-                <th>Id_utilisateur</th>
-                <td>{{ intervenant.idUtilisateur }}</td>
-            </tr>
-            <tr>
-                <th>Id_role</th>
-                <td>{{ intervenant.idRole }}</td>
-            </tr>
-            <tr>
-                <th>Id_matiere</th>
-                <td>{{ intervenant.idMatiere }}</td>
             </tr>
             <tr>
                 <th>Nb_heure</th>
@@ -36,7 +20,7 @@
 
     <a href="{{ path('app_intervenant_index') }}">back to list</a>
 
-    <a href="{{ path('app_intervenant_edit', {'id': intervenant.id}) }}">edit</a>
+    <a href="{{ path('app_intervenant_edit', {'id_intervenant': intervenant.id_intervenant}) }}">edit</a>
 
     {{ include('intervenant/_delete_form.html.twig') }}
 {% endblock %}

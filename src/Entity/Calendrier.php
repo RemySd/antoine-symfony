@@ -35,7 +35,7 @@ class Calendrier
 
     public function getId(): ?int
     {
-        return $this->id;
+        return $this->id_calendrier;
     }
 
     public function getIdCalendrier(): ?int

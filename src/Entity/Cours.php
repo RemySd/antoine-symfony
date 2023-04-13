@@ -4,7 +4,6 @@ namespace App\Entity;
 
 use App\Repository\CoursRepository;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -15,8 +14,6 @@ class Cours
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id_cours = null;
-
-
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $dateHeureCour_debut = null;
@@ -32,26 +29,19 @@ class Cours
     #[ORM\JoinColumn(nullable: false,name: 'id_calendrier', referencedColumnName:'id_calendrier')]
     private ?Calendrier $id_calendrier = null;
 
+    #[ORM\ManyToOne(inversedBy: 'cours')]
+    #[ORM\JoinColumn(nullable: false,name: 'id_intervenant', referencedColumnName:'id_intervenant')]
+    private ?Intervenant $intervenant = null;
 
     public function __construct()
     {
-        $this->id_intervenant = new ArrayCollection();
+        $this->id_cours = new ArrayCollection();
     }
-
 
     public function getIdCours(): ?int
     {
         return $this->id_cours;
     }
-
-
-
-
-
-
-
-
-
 
     public function getDateHeureCourDebut(): ?\DateTimeInterface
     {
@@ -101,26 +91,14 @@ class Cours
         return $this;
     }
 
-    /**
-     * @return Collection<int, Intervenant>
-     */
-    public function getIdIntervenant(): Collection
+    public function getIntervenant(): ?Intervenant
     {
-        return $this->id_intervenant;
+        return $this->intervenant;
     }
 
-    public function addIdIntervenant(Intervenant $idIntervenant): self
+    public function setIntervenant(?Intervenant $intervenant): self
     {
-        if (!$this->id_intervenant->contains($idIntervenant)) {
-            $this->id_intervenant->add($idIntervenant);
-        }
-
-        return $this;
-    }
-
-    public function removeIdIntervenant(Intervenant $idIntervenant): self
-    {
-        $this->id_intervenant->removeElement($idIntervenant);
+        $this->intervenant = $intervenant;
 
         return $this;
     }

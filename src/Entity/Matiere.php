@@ -15,17 +15,21 @@ class Matiere
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?int $id_matiere = null;
-
-    #[ORM\Column(length: 20, nullable: true)]
-    private ?string $libellé_matière = null;
-
     #[ORM\Column(length: 20, nullable: true)]
     private ?string $specialite = null;
 
     #[ORM\OneToMany(mappedBy: 'id_matiere', targetEntity: Cours::class)]
     private Collection $cours;
+
+    #[ORM\ManyToOne(inversedBy: 'matieres')]
+    #[ORM\JoinColumn(nullable: false,name: 'id_intervenant', referencedColumnName:'id_intervenant')]
+    private ?Intervenant $intervenant = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $libelle = null;
+
+    #[ORM\Column]
+    private ?int $nbHours = null;
 
     public function __construct()
     {
@@ -35,30 +39,6 @@ class Matiere
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getIdMatiere(): ?int
-    {
-        return $this->id_matiere;
-    }
-
-    public function setIdMatiere(int $id_matiere): self
-    {
-        $this->id_matiere = $id_matiere;
-
-        return $this;
-    }
-
-    public function getLibelléMatière(): ?string
-    {
-        return $this->libellé_matière;
-    }
-
-    public function setLibelléMatière(?string $libellé_matière): self
-    {
-        $this->libellé_matière = $libellé_matière;
-
-        return $this;
     }
 
     public function getSpecialite(): ?string
@@ -99,6 +79,42 @@ class Matiere
                 $cour->setIdMatiere(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getIntervenant(): ?Intervenant
+    {
+        return $this->intervenant;
+    }
+
+    public function setIntervenant(?Intervenant $intervenant): self
+    {
+        $this->intervenant = $intervenant;
+
+        return $this;
+    }
+
+    public function getLibelle(): ?string
+    {
+        return $this->libelle;
+    }
+
+    public function setLibelle(string $libelle): self
+    {
+        $this->libelle = $libelle;
+
+        return $this;
+    }
+
+    public function getNbHours(): ?int
+    {
+        return $this->nbHours;
+    }
+
+    public function setNbHours(int $nbHours): self
+    {
+        $this->nbHours = $nbHours;
 
         return $this;
     }

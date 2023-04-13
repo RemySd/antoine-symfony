@@ -2,9 +2,11 @@
 
 namespace App\Form;
 
+use App\Entity\User;
 use App\Entity\Intervenant;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class IntervenantFormType extends AbstractType
@@ -12,11 +14,11 @@ class IntervenantFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('id_intervenant')
-            ->add('id_utilisateur')
-            ->add('id_role')
-            ->add('id_matiere')
             ->add('nb_heure')
+            ->add('user', EntityType::class, [
+                'class' => User::class,
+                'choice_label' => 'firstname',
+            ])
         ;
     }
 

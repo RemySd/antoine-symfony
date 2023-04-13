@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/matiere')]
+#[Route('/admin/matiere')]
 class MatiereController extends AbstractController
 {
     #[Route('/', name: 'app_matiere_index', methods: ['GET'])]
