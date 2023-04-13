@@ -41,7 +41,6 @@ class BaseController extends AbstractController
         $annee = new \DateTime($year.'-08-31');
         $annee ->modify('first monday');
 
-
         $annee_suivante=new \DateTime(($year+1).'-08-31');
         $annee_suivante ->modify('first monday');
 
@@ -51,7 +50,7 @@ class BaseController extends AbstractController
             $tableau_semaines[]=$annee->modify('next monday')->format('Y-m-d');
         }
         array_pop($tableau_semaines);
-        dump($tableau_semaines);
+        
         return $this->render("calendrier.html.twig",["tableauSemaines"=>$tableau_semaines]);
     }
 

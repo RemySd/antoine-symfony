@@ -16,17 +16,14 @@ class Calendrier
     #[ORM\Column]
     private ?int $id_calendrier = null;
 
-    #[ORM\Column(length: 20, nullable: true)]
-    private ?string $libellé_periode = null;
-
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $date_debut = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $date_fin = null;
-
     #[ORM\OneToMany(mappedBy: 'id_calendrier', targetEntity: Cours::class)]
     private Collection $cours;
+
+    #[ORM\Column(length: 255)]
+    private ?string $type = null;
 
     public function __construct()
     {
@@ -50,18 +47,6 @@ class Calendrier
         return $this;
     }
 
-    public function getLibelléPeriode(): ?string
-    {
-        return $this->libellé_periode;
-    }
-
-    public function setLibelléPeriode(?string $libellé_periode): self
-    {
-        $this->libellé_periode = $libellé_periode;
-
-        return $this;
-    }
-
     public function getDateDebut(): ?\DateTimeInterface
     {
         return $this->date_debut;
@@ -70,18 +55,6 @@ class Calendrier
     public function setDateDebut(?\DateTimeInterface $date_debut): self
     {
         $this->date_debut = $date_debut;
-
-        return $this;
-    }
-
-    public function getDateFin(): ?\DateTimeInterface
-    {
-        return $this->date_fin;
-    }
-
-    public function setDateFin(?\DateTimeInterface $date_fin): self
-    {
-        $this->date_fin = $date_fin;
 
         return $this;
     }
@@ -112,6 +85,18 @@ class Calendrier
                 $cour->setIdCalendrier(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): self
+    {
+        $this->type = $type;
 
         return $this;
     }

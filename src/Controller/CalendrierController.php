@@ -5,12 +5,13 @@ namespace App\Controller;
 use App\Entity\Calendrier;
 use App\Form\CalendrierType;
 use App\Repository\CalendrierRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-#[Route('/calendrier')]
+#[Route('/admin/calendrier')]
 class CalendrierController extends AbstractController
 {
     #[Route('/', name: 'app_calendrier_index', methods: ['GET'])]
@@ -40,7 +41,7 @@ class CalendrierController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_calendrier_show', methods: ['GET'])]
+    #[Route('/{id_calendrier}', name: 'app_calendrier_show', methods: ['GET'])]
     public function show(Calendrier $calendrier): Response
     {
         return $this->render('calendrier/show.html.twig', [
@@ -48,7 +49,7 @@ class CalendrierController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_calendrier_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id_calendrier}/edit', name: 'app_calendrier_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Calendrier $calendrier, CalendrierRepository $calendrierRepository): Response
     {
         $form = $this->createForm(CalendrierType::class, $calendrier);
@@ -66,10 +67,10 @@ class CalendrierController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_calendrier_delete', methods: ['POST'])]
+    #[Route('/{id_calendrier}', name: 'app_calendrier_delete', methods: ['POST'])]
     public function delete(Request $request, Calendrier $calendrier, CalendrierRepository $calendrierRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$calendrier->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete'.$calendrier->getId_calendrier(), $request->request->get('_token'))) {
             $calendrierRepository->remove($calendrier, true);
         }
 

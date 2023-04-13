@@ -14,7 +14,6 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var semaines=document.querySelectorAll("[data-semaine]");
-            console.log(semaines);
             var calendarEl = document.getElementById('calendar');
             var isOnSelect = false;
             var eventCreate=null;
@@ -64,9 +63,9 @@
             });
             var calendar_buttons={};
             var all_buttons=""
+
             for (var i=0;i<semaines.length;i++)
             {
-                console.log(i)
                 all_buttons=all_buttons+"custom"+i+",";
                 calendar_buttons["custom"+i]={
                     text: i.toString(),
@@ -76,11 +75,43 @@
                     }
                 }
             }
-            console.log(calendar_buttons);
+
             all_buttons = all_buttons.substr(0, all_buttons.length - 1);
             calendar.setOption('headerToolbar',{start:all_buttons});
             calendar.setOption('customButtons',calendar_buttons);
             calendar.render();
+
+            fetch('https://127.0.0.1:8000/get-alternance-weeks')
+                .then((response) => response.json())
+                .then((data) => {
+                    console.log(data);
+                    
+                    data.forEach((element) => {
+                        var dateDebut = new Date(element.dateDebut);
+
+                        // Mettre les minutes et les secondes à 0
+                        dateDebut.setHours(0);
+                        dateDebut.setMinutes(0);
+                        dateDebut.setSeconds(0);
+
+                        // Convertir la date en chaîne de caractères au format ISO 8601
+                        var newDateDebut = dateDebut.toISOString();
+
+                        var dateString = newDateDebut;
+
+                        var date = new Date(dateString);
+                        date.setDate(date.getDate() + 5);
+                        var newDateString = date.toISOString();
+
+                        calendar.addEvent({
+                            title: element.type,
+                            start: newDateDebut,
+                            end: newDateString,
+                            allDay: false // will make the time show
+                        });
+
+                    });
+                });
 
             document.body.addEventListener('click', (event) => {
 

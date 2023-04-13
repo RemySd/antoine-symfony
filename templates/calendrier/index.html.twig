@@ -8,30 +8,26 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
                 <th>Id_calendrier</th>
-                <th>Libellé_periode</th>
                 <th>Date_debut</th>
-                <th>Date_fin</th>
+                <th>Type</th>
                 <th>actions</th>
             </tr>
         </thead>
         <tbody>
         {% for calendrier in calendriers %}
             <tr>
-                <td>{{ calendrier.id }}</td>
                 <td>{{ calendrier.idCalendrier }}</td>
-                <td>{{ calendrier.libelléPeriode }}</td>
                 <td>{{ calendrier.dateDebut ? calendrier.dateDebut|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ calendrier.dateFin ? calendrier.dateFin|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ calendrier.type }}</td>
                 <td>
-                    <a href="{{ path('app_calendrier_show', {'id': calendrier.id}) }}">show</a>
-                    <a href="{{ path('app_calendrier_edit', {'id': calendrier.id}) }}">edit</a>
+                    <a href="{{ path('app_calendrier_show', {'id_calendrier': calendrier.idCalendrier}) }}">show</a>
+                    <a href="{{ path('app_calendrier_edit', {'id_calendrier': calendrier.idCalendrier}) }}">edit</a>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="6">no records found</td>
+                <td colspan="4">no records found</td>
             </tr>
         {% endfor %}
         </tbody>
