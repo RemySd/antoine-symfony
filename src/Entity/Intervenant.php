@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\IntervenantRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: IntervenantRepository::class)]
@@ -10,9 +12,6 @@ class Intervenant
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
-
     #[ORM\Column]
     private ?int $id_intervenant = null;
 
@@ -28,10 +27,11 @@ class Intervenant
     #[ORM\Column(nullable: true)]
     private ?int $nb_heure = null;
 
-    public function getId(): ?int
+    public function __construct()
     {
-        return $this->id;
+        $this->cours = new ArrayCollection();
     }
+
 
     public function getIdIntervenant(): ?int
     {
@@ -89,6 +89,33 @@ class Intervenant
     public function setNbHeure(?int $nb_heure): self
     {
         $this->nb_heure = $nb_heure;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Cours>
+     */
+    public function getCours(): Collection
+    {
+        return $this->cours;
+    }
+
+    public function addCour(Cours $cour): self
+    {
+        if (!$this->cours->contains($cour)) {
+            $this->cours->add($cour);
+            $cour->addIdIntervenant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCour(Cours $cour): self
+    {
+        if ($this->cours->removeElement($cour)) {
+            $cour->removeIdIntervenant($this);
+        }
 
         return $this;
     }

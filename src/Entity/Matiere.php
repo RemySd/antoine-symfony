@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\MatiereRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: MatiereRepository::class)]
@@ -21,6 +23,14 @@ class Matiere
 
     #[ORM\Column(length: 20, nullable: true)]
     private ?string $specialite = null;
+
+    #[ORM\OneToMany(mappedBy: 'id_matiere', targetEntity: Cours::class)]
+    private Collection $cours;
+
+    public function __construct()
+    {
+        $this->cours = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -59,6 +69,36 @@ class Matiere
     public function setSpecialite(?string $specialite): self
     {
         $this->specialite = $specialite;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Cours>
+     */
+    public function getCours(): Collection
+    {
+        return $this->cours;
+    }
+
+    public function addCour(Cours $cour): self
+    {
+        if (!$this->cours->contains($cour)) {
+            $this->cours->add($cour);
+            $cour->setIdMatiere($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCour(Cours $cour): self
+    {
+        if ($this->cours->removeElement($cour)) {
+            // set the owning side to null (unless already changed)
+            if ($cour->getIdMatiere() === $this) {
+                $cour->setIdMatiere(null);
+            }
+        }
 
         return $this;
     }

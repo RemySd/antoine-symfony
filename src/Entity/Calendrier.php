@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CalendrierRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -11,9 +13,6 @@ class Calendrier
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
-
     #[ORM\Column]
     private ?int $id_calendrier = null;
 
@@ -25,6 +24,14 @@ class Calendrier
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $date_fin = null;
+
+    #[ORM\OneToMany(mappedBy: 'id_calendrier', targetEntity: Cours::class)]
+    private Collection $cours;
+
+    public function __construct()
+    {
+        $this->cours = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -75,6 +82,36 @@ class Calendrier
     public function setDateFin(?\DateTimeInterface $date_fin): self
     {
         $this->date_fin = $date_fin;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Cours>
+     */
+    public function getCours(): Collection
+    {
+        return $this->cours;
+    }
+
+    public function addCour(Cours $cour): self
+    {
+        if (!$this->cours->contains($cour)) {
+            $this->cours->add($cour);
+            $cour->setIdCalendrier($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCour(Cours $cour): self
+    {
+        if ($this->cours->removeElement($cour)) {
+            // set the owning side to null (unless already changed)
+            if ($cour->getIdCalendrier() === $this) {
+                $cour->setIdCalendrier(null);
+            }
+        }
 
         return $this;
     }
