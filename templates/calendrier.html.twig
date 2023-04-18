@@ -54,13 +54,43 @@
                         .then((response) => response.text())
                         .then((html) => {
                             let customPopover = new bootstrap.Popover(info.jsEvent.target, {
-                            placement: 'right',
-                            content: 'x',
-                            html: true,
-                            sanitize: false,
-                            template: html
-                        });
-                        customPopover.show();
+                                placement: 'right',
+                                content: 'x',
+                                html: true,
+                                sanitize: false,
+                                template: html
+                            });
+                            
+                            customPopover.show();
+
+                            document.querySelector("#add-cours").addEventListener('click', () => {
+                                const dateStart = new Date(info.startStr);
+                                const isoDateStart = dateStart.toISOString();
+                                console.log(isoDateStart);
+                                fetch('https://127.0.0.1:8000/add-cours', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({
+                                        'dateHeureCour_debut': isoDateStart,
+                                        'dateHeureCour_fin': info.endStr,
+                                        'id_matiere': document.querySelector("#add-matiere").value,
+                                        'id_calendrier': 1,
+                                        'intervenant': document.querySelector("#add-intervenant").value
+                                    })
+                                })
+                                .then((response) => response.json())
+                                .then((data) => {
+                                    if (data.status == "ok") {
+                                        eventCreate=null;
+                                        const popovers = document.querySelectorAll('.popover');
+                                        popovers.forEach((element) => {
+                                            element.remove();
+                                        });
+                                    } 
+                                });
+                            });
                         
                         });
                     isOnSelect = true;
@@ -107,6 +137,20 @@
                             title: element.type,
                             start: newDateDebut,
                             end: newDateString,
+                            allDay: false // will make the time show
+                        });
+                    });
+                });
+
+            fetch('https://127.0.0.1:8000/get-cours')
+                .then((response) => response.json())
+                .then((data) => {                    
+                    data.forEach((element) => {
+                        console.log(element)
+                        calendar.addEvent({
+                            title: element.intervenant.user.firstname + ' ' + element.intervenant.user.lastname + ' - ' + element.idMatiere.libelle + ' - ' + element.idMatiere.specialite,
+                            start: element.dateHeureCourDebut,
+                            end: element.dateHeureCourFin,
                             allDay: false // will make the time show
                         });
                     });

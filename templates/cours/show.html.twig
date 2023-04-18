@@ -8,24 +8,8 @@
     <table class="table">
         <tbody>
             <tr>
-                <th>Id</th>
-                <td>{{ cour.id }}</td>
-            </tr>
-            <tr>
                 <th>Id_cours</th>
                 <td>{{ cour.idCours }}</td>
-            </tr>
-            <tr>
-                <th>Id_calendrier</th>
-                <td>{{ cour.idCalendrier }}</td>
-            </tr>
-            <tr>
-                <th>Id_matiere</th>
-                <td>{{ cour.idMatiere }}</td>
-            </tr>
-            <tr>
-                <th>Id_intervenant</th>
-                <td>{{ cour.idIntervenant }}</td>
             </tr>
             <tr>
                 <th>DateHeureCour_debut</th>
@@ -40,7 +24,7 @@
 
     <a href="{{ path('app_cours_index') }}">back to list</a>
 
-    <a href="{{ path('app_cours_edit', {'id': cour.id}) }}">edit</a>
+    <a href="{{ path('app_cours_edit', {'id_cours': cour.id_cours}) }}">edit</a>
 
     {{ include('cours/_delete_form.html.twig') }}
 {% endblock %}

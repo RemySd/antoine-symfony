@@ -18,8 +18,9 @@ class MatiereType extends AbstractType
             ->add('libelle')
             ->add('specialite', ChoiceType::class, [
                 'choices'  => [
-                    'Développement' => 'specialite',
-                    'Infrastructure' => 'specialite'
+                    'Développement' => 'developpement',
+                    'Infrastructure' => 'infrastructure',
+                    'Général' => 'general'
                 ],
             ])
             ->add('nbHours')

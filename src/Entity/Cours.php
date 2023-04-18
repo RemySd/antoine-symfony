@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\CoursRepository;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -32,11 +31,6 @@ class Cours
     #[ORM\ManyToOne(inversedBy: 'cours')]
     #[ORM\JoinColumn(nullable: false,name: 'id_intervenant', referencedColumnName:'id_intervenant')]
     private ?Intervenant $intervenant = null;
-
-    public function __construct()
-    {
-        $this->id_cours = new ArrayCollection();
-    }
 
     public function getIdCours(): ?int
     {
