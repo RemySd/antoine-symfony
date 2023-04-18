@@ -38,20 +38,18 @@ class BaseController extends AbstractController
      */
     function showCalendar($year)
     {
-        $annee = new \DateTime($year.'-08-31');
-        $annee ->modify('first monday');
+        $annee = new \DateTime($year . '-08-31');
+        $annee->modify('first monday');
 
-        $annee_suivante=new \DateTime(($year+1).'-08-31');
-        $annee_suivante ->modify('first monday');
+        $annee_suivante = new \DateTime(($year + 1) . '-08-31');
+        $annee_suivante->modify('first monday');
 
-        $tableau_semaines=[$annee->format('Y-m-d')];
-        while ($annee<$annee_suivante)
-        {
-            $tableau_semaines[]=$annee->modify('next monday')->format('Y-m-d');
+        $tableau_semaines = [$annee->format('Y-m-d')];
+        while ($annee < $annee_suivante) {
+            $tableau_semaines[] = $annee->modify('next monday')->format('Y-m-d');
         }
         array_pop($tableau_semaines);
-        
-        return $this->render("calendrier.html.twig",["tableauSemaines"=>$tableau_semaines]);
-    }
 
+        return $this->render("calendrier.html.twig", ["tableauSemaines" => $tableau_semaines]);
+    }
 }

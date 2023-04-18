@@ -21,7 +21,19 @@ class CalendarController extends AbstractController
     }
 
     #[Route('/get-cours-infos', name: 'get_cours_infos', methods: ['GET'])]
-    public function addCoursTemplate(IntervenantRepository $intervenantRepository, MatiereRepository $matiereRepository): Response
+    public function getAddCoursTemplate(IntervenantRepository $intervenantRepository, MatiereRepository $matiereRepository): Response
+    {
+        $intervenants = $intervenantRepository->findAll();
+        $matieres = $matiereRepository->findAll();
+
+        return $this->render('template_cours_admin.html.twig', [
+            'intervenants' => $intervenants,
+            'matieres' => $matieres
+        ]);
+    }
+
+    #[Route('/add-cours', name: 'add_cours', methods: ['POST'])]
+    public function addCours(IntervenantRepository $intervenantRepository, MatiereRepository $matiereRepository): Response
     {
         $intervenants = $intervenantRepository->findAll();
         $matieres = $matiereRepository->findAll();
