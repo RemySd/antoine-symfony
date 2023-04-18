@@ -9,7 +9,7 @@
         <tbody>
             <tr>
                 <th>Id_intervenant</th>
-                <td>{{ intervenant.idIntervenant }}</td>
+                <td>{{ intervenant.idIntervenant}}</td>
             </tr>
             <tr>
                 <th>Nb_heure</th>
@@ -20,7 +20,7 @@
 
     <a href="{{ path('app_intervenant_index') }}">back to list</a>
 
-    <a href="{{ path('app_intervenant_edit', {'id_intervenant': intervenant.id_intervenant}) }}">edit</a>
+    <a href="{{ path('app_intervenant_edit', {'id_intervenant': intervenant.idIntervenant}) }}">edit</a>
 
     {{ include('intervenant/_delete_form.html.twig') }}
 {% endblock %}

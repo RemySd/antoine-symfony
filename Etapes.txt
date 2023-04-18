@@ -3,3 +3,5 @@
 3:Pouvoir mettre des cours dans le calendrier
 4: pouvoir modifier les cours dans le calendriers
 5:Afficher les semaines dans chaques mois
+
+DATABASE_URL="mysql://root@127.0.0.1:3306/synfony_projet?serverVersion=mariadb-10.4.24"
