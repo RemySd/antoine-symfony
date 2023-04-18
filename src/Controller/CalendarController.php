@@ -59,6 +59,6 @@ class CalendarController extends AbstractController
             return $this->json(["status" => "ok"]);
         }
 
-        return $this->json(["status" => "nok"]);
+        return $this->json(["status" => "error"]);
     }
 }
