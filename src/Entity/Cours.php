@@ -25,11 +25,11 @@ class Cours
     private ?Matiere $id_matiere = null;
 
     #[ORM\ManyToOne(inversedBy: 'cours')]
-    #[ORM\JoinColumn(nullable: false,name: 'id_calendrier', referencedColumnName:'id_calendrier')]
+    #[ORM\JoinColumn(nullable: false, name: 'id_calendrier', referencedColumnName: 'id_calendrier')]
     private ?Calendrier $id_calendrier = null;
 
     #[ORM\ManyToOne(inversedBy: 'cours')]
-    #[ORM\JoinColumn(nullable: false,name: 'id_intervenant', referencedColumnName:'id_intervenant')]
+    #[ORM\JoinColumn(nullable: false, name: 'id_intervenant', referencedColumnName: 'id_intervenant')]
     private ?Intervenant $intervenant = null;
 
     public function getIdCours(): ?int
