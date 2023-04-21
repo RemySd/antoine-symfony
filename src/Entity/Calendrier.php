@@ -20,9 +20,6 @@ class Calendrier
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $date_debut = null;
 
-    #[ORM\OneToMany(mappedBy: 'id_calendrier', targetEntity: Cours::class)]
-    #[Ignore]
-    private Collection $cours;
 
     #[ORM\Column(length: 255)]
     private ?string $type = null;
@@ -57,36 +54,6 @@ class Calendrier
     public function setDateDebut(?\DateTimeInterface $date_debut): self
     {
         $this->date_debut = $date_debut;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Cours>
-     */
-    public function getCours(): Collection
-    {
-        return $this->cours;
-    }
-
-    public function addCour(Cours $cour): self
-    {
-        if (!$this->cours->contains($cour)) {
-            $this->cours->add($cour);
-            $cour->setIdCalendrier($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCour(Cours $cour): self
-    {
-        if ($this->cours->removeElement($cour)) {
-            // set the owning side to null (unless already changed)
-            if ($cour->getIdCalendrier() === $this) {
-                $cour->setIdCalendrier(null);
-            }
-        }
 
         return $this;
     }

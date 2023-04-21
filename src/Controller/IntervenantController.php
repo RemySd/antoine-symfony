@@ -72,7 +72,7 @@ class IntervenantController extends AbstractController
     #[Route('/{id_intervenant}/edit', name: 'app_intervenant_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Intervenant $intervenant, IntervenantRepository $intervenantRepository): Response
     {
-        $form = $this->createForm(Intervenant1Type::class, $intervenant);
+        $form = $this->createForm(IntervenantFormType::class, $intervenant);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -90,7 +90,7 @@ class IntervenantController extends AbstractController
     #[Route('/{id_intervenant}', name: 'app_intervenant_delete', methods: ['POST'])]
     public function delete(Request $request, Intervenant $intervenant, IntervenantRepository $intervenantRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete' . $intervenant->getId_intervenant(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $intervenant->getIdIntervenant(), $request->request->get('_token'))) {
             $intervenantRepository->remove($intervenant, true);
         }
 
