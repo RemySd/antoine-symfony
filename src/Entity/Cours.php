@@ -25,10 +25,6 @@ class Cours
     private ?Matiere $id_matiere = null;
 
     #[ORM\ManyToOne(inversedBy: 'cours')]
-    #[ORM\JoinColumn(nullable: false, name: 'id_calendrier', referencedColumnName: 'id_calendrier')]
-    private ?Calendrier $id_calendrier = null;
-
-    #[ORM\ManyToOne(inversedBy: 'cours')]
     #[ORM\JoinColumn(nullable: false, name: 'id_intervenant', referencedColumnName: 'id_intervenant')]
     private ?Intervenant $intervenant = null;
 
@@ -69,18 +65,6 @@ class Cours
     public function setIdMatiere(?Matiere $id_matiere): self
     {
         $this->id_matiere = $id_matiere;
-
-        return $this;
-    }
-
-    public function getIdCalendrier(): ?Calendrier
-    {
-        return $this->id_calendrier;
-    }
-
-    public function setIdCalendrier(?Calendrier $id_calendrier): self
-    {
-        $this->id_calendrier = $id_calendrier;
 
         return $this;
     }

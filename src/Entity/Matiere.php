@@ -19,7 +19,7 @@ class Matiere
     #[ORM\Column(length: 20, nullable: true)]
     private ?string $specialite = null;
 
-    #[ORM\OneToMany(mappedBy: 'id_matiere', targetEntity: Cours::class)]
+    #[ORM\OneToMany(mappedBy: 'id_matiere', targetEntity: Cours::class,cascade: ['persist', 'remove'])]
     #[Ignore]
     private Collection $cours;
 

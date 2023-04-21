@@ -19,11 +19,11 @@ class Intervenant
     #[ORM\Column(nullable: true)]
     private ?int $nb_heure = null;
 
-    #[ORM\OneToMany(mappedBy: 'intervenant', targetEntity: Cours::class)]
+    #[ORM\OneToMany(mappedBy: 'intervenant', targetEntity: Cours::class,cascade: ['persist', 'remove'])]
     #[Ignore]
     private Collection $cours;
 
-    #[ORM\OneToMany(mappedBy: 'intervenant', targetEntity: Matiere::class)]
+    #[ORM\OneToMany(mappedBy: 'intervenant', targetEntity: Matiere::class,cascade: ['persist', 'remove'])]
     #[Ignore]
     private Collection $matieres;
 

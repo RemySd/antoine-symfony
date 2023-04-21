@@ -8,8 +8,8 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>libelle</th>
+                <th>Libelle</th>
+                <th>Professeur</th>
                 <th>Specialite</th>
                 <th>nb hours</th>
                 <th>actions</th>
@@ -18,8 +18,8 @@
         <tbody>
         {% for matiere in matieres %}
             <tr>
-                <td>{{ matiere.id }}</td>
                 <td>{{ matiere.libelle }}</td>
+                <td>{{ matiere.intervenant.user.lastname }}</td>
                 <td>{{ matiere.specialite }}</td>
                 <td>{{ matiere.nbHours }}</td>
                 <td>

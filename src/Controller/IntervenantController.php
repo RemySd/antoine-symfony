@@ -92,7 +92,7 @@ class IntervenantController extends AbstractController
     #[Route('/{id_intervenant}', name: 'app_intervenant_delete', methods: ['POST'])]
     public function delete(Request $request, Intervenant $intervenant, IntervenantRepository $intervenantRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete' . $intervenant->getId_intervenant(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $intervenant->getIdIntervenant(), $request->request->get('_token'))) {
             $intervenantRepository->remove($intervenant, true);
         }
 
