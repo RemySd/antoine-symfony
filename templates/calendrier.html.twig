@@ -50,7 +50,7 @@
                         allDay: false // will make the time show
                     });
 
-                    fetch('https://127.0.0.1:8000/get-cours-infos')
+                    fetch('/get-cours-infos')
                         .then((response) => response.text())
                         .then((html) => {
                             let customPopover = new bootstrap.Popover(info.jsEvent.target, {
@@ -67,7 +67,7 @@
                                 const dateStart = new Date(info.startStr);
                                 const isoDateStart = dateStart.toISOString();
                                 console.log(isoDateStart);
-                                fetch('https://127.0.0.1:8000/add-cours', {
+                                fetch('/add-cours', {
                                     method: 'POST',
                                     headers: {
                                         'Content-Type': 'application/json'
@@ -116,7 +116,7 @@
             calendar.setOption('customButtons',calendar_buttons);
             calendar.render();
 
-            fetch('https://127.0.0.1:8000/get-alternance-weeks')
+            fetch('/get-alternance-weeks')
                 .then((response) => response.json())
                 .then((data) => {
                     console.log(data);
@@ -142,7 +142,7 @@
                     });
                 });
 
-            fetch('https://127.0.0.1:8000/get-cours')
+            fetch('/get-cours')
                 .then((response) => response.json())
                 .then((data) => {                    
                     data.forEach((element) => {
