@@ -38,6 +38,7 @@ class IntervenantController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $user->setRoles(["ROLE_INTERVENANT"]);
             // encode the plain password
             $user->setPassword(
                 $userPasswordHasher->hashPassword(
@@ -48,6 +49,7 @@ class IntervenantController extends AbstractController
 
             $intervenant = new Intervenant();
             $intervenant->setUser($user);
+            
 
             $entityManager->persist($user);
             $entityManager->persist($intervenant);
@@ -72,7 +74,7 @@ class IntervenantController extends AbstractController
     #[Route('/{id_intervenant}/edit', name: 'app_intervenant_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Intervenant $intervenant, IntervenantRepository $intervenantRepository): Response
     {
-        $form = $this->createForm(Intervenant1Type::class, $intervenant);
+        $form = $this->createForm(IntervenantFormType::class, $intervenant);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

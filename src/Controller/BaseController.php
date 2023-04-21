@@ -34,7 +34,7 @@ class BaseController extends AbstractController
         //ucwords = upper case words
     }
     /**
-     * @Route ("/calendrier/{year}",name="calendrier")
+     * @Route ("/admin/calendrier/{year}",name="calendrier")
      */
     function showCalendar($year)
     {

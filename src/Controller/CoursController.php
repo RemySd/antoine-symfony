@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/cours')]
+#[Route('/admin/cours')]
 class CoursController extends AbstractController
 {
     #[Route('/', name: 'app_cours_index', methods: ['GET'])]
@@ -69,7 +69,7 @@ class CoursController extends AbstractController
     #[Route('/{id_cours}', name: 'app_cours_delete', methods: ['POST'])]
     public function delete(Request $request, Cours $cour, CoursRepository $coursRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$cour->getId_cours(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete'.$cour->getIdCours(), $request->request->get('_token'))) {
             $coursRepository->remove($cour, true);
         }
 

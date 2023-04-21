@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New IntervenantDisponibility{% endblock %}
+
+{% block body %}
+    <h1>Create new IntervenantDisponibility</h1>
+
+    {{ include('intervenant_disponibility/_form.html.twig') }}
+
+    <a href="{{ path('app_intervenant_disponibility_index') }}">back to list</a>
+{% endblock %}
