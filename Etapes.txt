@@ -8,4 +8,6 @@ DATABASE_URL="mysql://root@127.0.0.1:3306/synfony_projet?serverVersion=mariadb-1
 
  Lancer le site en https : "symfony server:ca:install"
 
- Calendar controller.txt
+Mettre a jour la base de données php: php bin/console d:s:u -f
+
+
