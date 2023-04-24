@@ -12,8 +12,6 @@
 				<th>Nom</th>
 				<th>Prénom</th>
 				<th>Matière</th>
-				<th>Nb_heure</th>
-				<th>actions</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -22,7 +20,6 @@
 					<td>{{ intervenant.user.lastname }}</td>	
 					<td>{{ intervenant.user.firstname }}</td>
 					<td>{{ intervenant.matieres | join(' | ') }} </td>
-					<td>{{ intervenant.nbHeure }}</td>
 					<td>
 						<a href="{{ path('app_intervenant_show', {'id_intervenant': intervenant.idIntervenant}) }}">show</a>
 						<a href="{{ path('app_intervenant_edit', {'id_intervenant': intervenant.idIntervenant}) }}">edit</a>
