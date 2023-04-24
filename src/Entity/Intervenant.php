@@ -16,9 +16,6 @@ class Intervenant
     #[ORM\Column]
     private ?int $id_intervenant = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $nb_heure = null;
-
     #[ORM\OneToMany(mappedBy: 'intervenant', targetEntity: Cours::class,cascade: ['persist', 'remove'])]
     #[Ignore]
     private Collection $cours;
@@ -45,18 +42,6 @@ class Intervenant
     public function setIdIntervenant(int $id_intervenant): self
     {
         $this->id_intervenant = $id_intervenant;
-
-        return $this;
-    }
-
-    public function getNbHeure(): ?int
-    {
-        return $this->nb_heure;
-    }
-
-    public function setNbHeure(?int $nb_heure): self
-    {
-        $this->nb_heure = $nb_heure;
 
         return $this;
     }

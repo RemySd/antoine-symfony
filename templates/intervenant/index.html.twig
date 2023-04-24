@@ -12,7 +12,7 @@
 				<th>Id_intervenant</th>
 				<th>Prénom</th>
 				<th>Nom</th>
-				<th>Nb_heure</th>
+				<th>Matière</th>
 				<th>actions</th>
 			</tr>
 		</thead>
@@ -22,7 +22,7 @@
 					<td>{{ intervenant.idIntervenant }}</td>
 					<td>{{ intervenant.user.firstname }}</td>
 					<td>{{ intervenant.user.lastname }}</td>
-					<td>{{ intervenant.nbHeure }}</td>
+					<td>{{ intervenant.matieres | join(' | ') }} </td>
 					<td>
 						<a href="{{ path('app_intervenant_show', {'id_intervenant': intervenant.idIntervenant}) }}">show</a>
 						<a href="{{ path('app_intervenant_edit', {'id_intervenant': intervenant.idIntervenant}) }}">edit</a>
