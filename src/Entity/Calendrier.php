@@ -20,7 +20,6 @@ class Calendrier
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $date_debut = null;
 
-
     #[ORM\Column(length: 255)]
     private ?string $type = null;
 
