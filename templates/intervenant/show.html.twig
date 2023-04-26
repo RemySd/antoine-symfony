@@ -8,12 +8,10 @@
     <table class="table">
         <tbody>
             <tr>
-                <th>Id_intervenant</th>
-                <td>{{ intervenant.idIntervenant}}</td>
-            </tr>
-            <tr>
-                <th>Nb_heure</th>
-                <td>{{ intervenant.nbHeure }}</td>
+                <th>Nom intervenant</th>
+                <td>{{ intervenant.user.lastname}}</td>
+                <th> Prénom intervenant</th>
+                <td>{{ intervenant.user.firstname}}</td>
             </tr>
         </tbody>
     </table>
