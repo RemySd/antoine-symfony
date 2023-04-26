@@ -17,8 +17,9 @@ class MatiereExtensionRuntime implements RuntimeExtensionInterface
         $this->entityManager = $entityManager;
     }
 
-    public function getMinutesByMatiere(Matiere $matiere)
+    public function getMinutesByMatiere(Matiere $matiere): int
     {
-        return $this->entityManager->getRepository(Cours::class)->getMinutesConsumedByMatiere($matiere)['minutes'];
+        $result = $this->entityManager->getRepository(Cours::class)->getMinutesConsumedByMatiere($matiere);
+        return $result ? $result['minutes'] : 0;
     }
 }
