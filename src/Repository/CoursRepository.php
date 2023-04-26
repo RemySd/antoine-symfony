@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Cours;
+use App\Entity\Matiere;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -37,6 +38,33 @@ class CoursRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function getMinutesSumGroupedByMatieres(): array
+    {
+        $qb = $this->createQueryBuilder('c');
+        $qb->select('SUM(timestamp_diff(MINUTE, c.dateHeureCour_debut, c.dateHeureCour_fin)) AS minutes')
+           ->addSelect('m.id')
+           ->join('c.id_matiere', 'm')
+           ->groupBy('m.id');
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
+    }
+
+    public function getMinutesConsumedByMatiere(Matiere $matiere)
+    {
+        $queryBuilder = $this->createQueryBuilder('c');
+        $queryBuilder->select('SUM(timestamp_diff(MINUTE, c.dateHeureCour_debut, c.dateHeureCour_fin)) AS minutes')
+           ->addSelect('m.id')
+           ->join('c.id_matiere', 'm')
+           ->where('m.id = :matiere')
+           ->setParameter(':matiere', $matiere)
+           ->groupBy('m.id');
+        
+        
+
+        return $queryBuilder->getQuery()->getOneOrNullResult();
     }
 
 //    /**

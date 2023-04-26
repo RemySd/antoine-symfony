@@ -27,9 +27,6 @@ class CoursType extends AbstractType
             ->add('id_matiere', EntityType::class, [
                 'class' => Matiere::class,
             ])
-            ->add('id_calendrier', EntityType::class, [
-                'class' => Calendrier::class,
-            ])
             ->add('intervenant', EntityType::class, [
                 'class' => Intervenant::class,
             ]);

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\IntervenantDisponibility;
+use App\Repository\CoursRepository;
 use App\Repository\IntervenantDisponibilityRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -10,8 +11,10 @@ use Symfony\Component\Routing\Annotation\Route;
 class AdminController extends AbstractController
 {
     #[Route('/admin', name: 'admin_page')]
-    public function home()
+    public function home(CoursRepository $coursRepository)
     {
+        dump($coursRepository->getMinutesSumGroupedByMatieres());
+
         return $this->render('admin/index.html.twig');
     }
 
