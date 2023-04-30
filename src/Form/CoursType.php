@@ -29,6 +29,7 @@ class CoursType extends AbstractType
             ])
             ->add('intervenant', EntityType::class, [
                 'class' => Intervenant::class,
+                'choice_label' => 'user.firstname',
             ]);
     }
 
