@@ -25,7 +25,6 @@ class Matiere
 
     #[ORM\ManyToOne(inversedBy: 'matieres')]
     #[ORM\JoinColumn(nullable: false,name: 'id_intervenant', referencedColumnName:'id_intervenant')]
-    #[Ignore]
     private ?Intervenant $intervenant = null;
 
     #[ORM\Column(length: 255)]

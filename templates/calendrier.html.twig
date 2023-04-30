@@ -75,8 +75,7 @@
                                     body: JSON.stringify({
                                         'dateHeureCour_debut': isoDateStart,
                                         'dateHeureCour_fin': info.endStr,
-                                        'id_matiere': document.querySelector("#add-matiere").value,
-                                        'intervenant': document.querySelector("#add-intervenant").value
+                                        'id_matiere': document.querySelector("#add-matiere").value
                                     })
                                 })
                                 .then((response) => response.json())
@@ -155,9 +154,9 @@
                 .then((response) => response.json())
                 .then((data) => {                    
                     data.forEach((element) => {
-                        console.log(element)
+                        console.log(element);
                         calendar.addEvent({
-                            title: element.intervenant.user.firstname + ' ' + element.intervenant.user.lastname + ' - ' + element.idMatiere.libelle + ' - ' + element.idMatiere.specialite,
+                            title: element.idMatiere.intervenant.user.firstname + ' ' + element.idMatiere.intervenant.user.lastname + ' - ' + element.idMatiere.libelle + ' - ' + element.idMatiere.specialite,
                             start: element.dateHeureCourDebut,
                             end: element.dateHeureCourFin,
                             allDay: false // will make the time show

@@ -24,10 +24,6 @@ class CoursType extends AbstractType
             ])
             ->add('id_matiere', EntityType::class, [
                 'class' => Matiere::class,
-            ])
-            ->add('intervenant', EntityType::class, [
-                'class' => Intervenant::class,
-                'choice_label' => 'user.firstname',
             ]);
     }
 

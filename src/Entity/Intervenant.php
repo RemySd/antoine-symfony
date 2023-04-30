@@ -16,10 +16,6 @@ class Intervenant
     #[ORM\Column]
     private ?int $id_intervenant = null;
 
-    #[ORM\OneToMany(mappedBy: 'intervenant', targetEntity: Cours::class,cascade: ['persist', 'remove'])]
-    #[Ignore]
-    private Collection $cours;
-
     #[ORM\OneToMany(mappedBy: 'intervenant', targetEntity: Matiere::class,cascade: ['persist', 'remove'])]
     #[Ignore]
     private Collection $matieres;
@@ -30,7 +26,6 @@ class Intervenant
 
     public function __construct()
     {
-        $this->cours = new ArrayCollection();
         $this->matieres = new ArrayCollection();
     }
 
@@ -47,36 +42,6 @@ class Intervenant
     public function setIdIntervenant(int $id_intervenant): self
     {
         $this->id_intervenant = $id_intervenant;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Cours>
-     */
-    public function getCours(): Collection
-    {
-        return $this->cours;
-    }
-
-    public function addCour(Cours $cour): self
-    {
-        if (!$this->cours->contains($cour)) {
-            $this->cours->add($cour);
-            $cour->setIntervenant($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCour(Cours $cour): self
-    {
-        if ($this->cours->removeElement($cour)) {
-            // set the owning side to null (unless already changed)
-            if ($cour->getIntervenant() === $this) {
-                $cour->setIntervenant(null);
-            }
-        }
 
         return $this;
     }

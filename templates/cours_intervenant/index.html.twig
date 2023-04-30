@@ -8,7 +8,7 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Id_cours</th>
+                <th>Matière</th>
                 <th>DateHeureCour_debut</th>
                 <th>DateHeureCour_fin</th>
                 <th>actions</th>
@@ -17,7 +17,7 @@
         <tbody>
         {% for cour in cours %}
             <tr>
-                <td>{{ cour.idCours }}</td>
+                <td>{{ cour.idMatiere.fullName }}</td>
                 <td>{{ cour.dateHeureCourDebut ? cour.dateHeureCourDebut|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ cour.dateHeureCourFin ? cour.dateHeureCourFin|date('Y-m-d H:i:s') : '' }}</td>
                 <td>

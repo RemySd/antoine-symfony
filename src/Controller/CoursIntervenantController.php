@@ -15,12 +15,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class CoursIntervenantController extends AbstractController
 {
     #[Route('/', name: 'app_cours_index_intervenant', methods: ['GET'])]
-    public function index(IntervenantRepository $intervenantRepository, Security $security): Response
+    public function index(IntervenantRepository $intervenantRepository, Security $security, CoursRepository $coursRepository): Response
     {
         $intervenant = $intervenantRepository->findOneBy(['user' => $security->getUser()]);
 
         return $this->render('cours_intervenant/index.html.twig', [
-            'cours' => $intervenant->getCours(),
+            'cours' => $coursRepository->getCoursByIntervenants($intervenant),
         ]);
     }
 

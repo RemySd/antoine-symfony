@@ -4,8 +4,9 @@ namespace App\Repository;
 
 use App\Entity\Cours;
 use App\Entity\Matiere;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Entity\Intervenant;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<Cours>
@@ -62,31 +63,18 @@ class CoursRepository extends ServiceEntityRepository
            ->setParameter(':matiere', $matiere)
            ->groupBy('m.id');
         
-        return $queryBuilder->getQuery()->getOneOrNullResult();
+        return $queryBuilder->getQuery()->getOneOrNullResult() ?: ['minutes' => 0];
     }
 
-//    /**
-//     * @return Cours[] Returns an array of Cours objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('c.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?Cours
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function getCoursByIntervenants(Intervenant $intervenant)
+    {
+        $queryBuilder = $this->createQueryBuilder('c');
+        $queryBuilder->select('c')
+           ->join('c.id_matiere', 'm')
+           ->join('m.intervenant', 'i')
+           ->where('i.id_intervenant = :intervenant')
+           ->setParameter(':intervenant', $intervenant);
+        
+        return $queryBuilder->getQuery()->getResult();
+    }
 }
