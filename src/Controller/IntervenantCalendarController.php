@@ -4,8 +4,10 @@ namespace App\Controller;
 
 use App\Repository\MatiereRepository;
 use App\Repository\IntervenantRepository;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/intervenant')]
@@ -17,7 +19,7 @@ class IntervenantCalendarController extends AbstractController
         return $this->render('intervenant_panel/index.html.twig');
     }
 
-    #[Route('/calendrier/{year}', name: 'app_intervenant_show', methods: ['GET'])]
+    #[Route('/calendrier/{year}', name: 'app_intervenant_calendar', methods: ['GET'])]
     public function showCalendar(int $year): Response
     {
         $annee = new \DateTime($year . '-08-31');
@@ -33,6 +35,14 @@ class IntervenantCalendarController extends AbstractController
         array_pop($tableau_semaines);
 
         return $this->render("intervenant/calendrier.html.twig", ["tableauSemaines" => $tableau_semaines]);
+    }
+
+    #[Route('/get-cours', name: 'get_intervenant_cours', methods: ['GET'])]
+    public function getCours(IntervenantRepository $intervenantRepository, Security $security): JsonResponse
+    {
+        $intervenant = $intervenantRepository->findOneBy(['user' => $security->getUser()]);
+
+        return $this->json($intervenant->getCours());
     }
 
     #[Route('/get-cours-infos', name: 'intervenant_get_cours_infos', methods: ['GET'])]

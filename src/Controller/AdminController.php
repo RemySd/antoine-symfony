@@ -11,10 +11,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class AdminController extends AbstractController
 {
     #[Route('/admin', name: 'admin_page')]
-    public function home(CoursRepository $coursRepository)
+    public function home()
     {
-        dump($coursRepository->getMinutesSumGroupedByMatieres());
-
         return $this->render('admin/index.html.twig');
     }
 

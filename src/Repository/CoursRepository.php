@@ -62,8 +62,6 @@ class CoursRepository extends ServiceEntityRepository
            ->setParameter(':matiere', $matiere)
            ->groupBy('m.id');
         
-        
-
         return $queryBuilder->getQuery()->getOneOrNullResult();
     }
 

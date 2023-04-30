@@ -45,7 +45,7 @@ class CalendarController extends AbstractController
     }
 
     #[Route('/add-cours', name: 'add_cours', methods: ['POST'])]
-    public function addCours(Request $request, CoursRepository $coursRepository): Response
+    public function addCours(Request $request, CoursRepository $coursRepository, MatiereRepository $matiereRepository): Response
     {
         $cours = new Cours();
         $form = $this->createForm(CoursType::class, $cours);
@@ -53,12 +53,24 @@ class CalendarController extends AbstractController
         $data = json_decode($request->getContent(), true);
         $form->submit($data);
 
+        $matiere = $matiereRepository->find($data['id_matiere']);
+
+        $dateHeureCourDebut = new \DateTime($data['dateHeureCour_debut']);
+        $dateHeureCourFin = new \DateTime($data['dateHeureCour_fin']);
+        $interval = $dateHeureCourDebut->diff($dateHeureCourFin);
+        $minutesToAdd = $interval->days * 24 * 60 + $interval->h * 60 + $interval->i;
+
+        if ($coursRepository->getMinutesConsumedByMatiere($matiere)['minutes'] + $minutesToAdd > $matiere->getNbHours() * 60) {
+            return $this->json(["status" => "error_hours"], 400);
+        }
+
+
         if ($form->isValid()) {
             $coursRepository->save($cours, true);
 
-            return $this->json(["status" => "ok"]);
+            return $this->json(["status" => "ok", "title" => $matiere->getIntervenant()->getFullName() . ' - ' . $matiere->getFullName()]);
         }
 
-        return $this->json(["status" => "error"]);
+        return $this->json(["status" => "error"], 400);
     }
 }

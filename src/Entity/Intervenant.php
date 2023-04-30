@@ -34,6 +34,11 @@ class Intervenant
         $this->matieres = new ArrayCollection();
     }
 
+    public function getFullName(): string
+    {
+        return $this->user->getFirstname() . ' ' . $this->user->getLastname();
+    }
+
     public function getIdIntervenant(): ?int
     {
         return $this->id_intervenant;

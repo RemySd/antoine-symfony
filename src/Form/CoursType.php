@@ -4,14 +4,12 @@ namespace App\Form;
 
 use App\Entity\Cours;
 use App\Entity\Matiere;
-use App\Entity\Calendrier;
 use App\Entity\Intervenant;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
-use Symfony\Component\Validator\Constraints\DateTime;
 
 class CoursType extends AbstractType
 {
@@ -29,6 +27,7 @@ class CoursType extends AbstractType
             ])
             ->add('intervenant', EntityType::class, [
                 'class' => Intervenant::class,
+                'choice_label' => 'user.firstname',
             ]);
     }
 

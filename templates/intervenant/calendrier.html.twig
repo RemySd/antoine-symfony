@@ -49,52 +49,6 @@
                         end: info.endStr,
                         allDay: false // will make the time show
                     });
-
-                    fetch('/intervenant/get-cours-infos')
-                        .then((response) => response.text())
-                        .then((html) => {
-                            let customPopover = new bootstrap.Popover(info.jsEvent.target, {
-                                placement: 'right',
-                                content: 'x',
-                                html: true,
-                                sanitize: false,
-                                template: html
-                            });
-                            
-                            customPopover.show();
-
-                            document.querySelector("#add-cours").addEventListener('click', () => {
-                                const dateStart = new Date(info.startStr);
-                                const isoDateStart = dateStart.toISOString();
-                                console.log(isoDateStart);
-                                fetch('/add-cours', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json'
-                                    },
-                                    body: JSON.stringify({
-                                        'dateHeureCour_debut': isoDateStart,
-                                        'dateHeureCour_fin': info.endStr,
-                                        'id_matiere': document.querySelector("#add-matiere").value,
-                                        'id_calendrier': 1,
-                                        'intervenant': document.querySelector("#add-intervenant").value
-                                    })
-                                })
-                                .then((response) => response.json())
-                                .then((data) => {
-                                    if (data.status == "ok") {
-                                        eventCreate=null;
-                                        const popovers = document.querySelectorAll('.popover');
-                                        popovers.forEach((element) => {
-                                            element.remove();
-                                        });
-                                    } 
-                                });
-                            });
-                        
-                        });
-                    isOnSelect = true;
-                    
                 },
             });
             var calendar_buttons={};
@@ -146,7 +100,6 @@
                 .then((response) => response.json())
                 .then((data) => {                    
                     data.forEach((element) => {
-                        console.log(element)
                         calendar.addEvent({
                             title: element.intervenant.user.firstname + ' ' + element.intervenant.user.lastname + ' - ' + element.idMatiere.libelle + ' - ' + element.idMatiere.specialite,
                             start: element.dateHeureCourDebut,
@@ -155,27 +108,6 @@
                         });
                     });
                 });
-
-            document.body.addEventListener('click', (event) => {
-
-                if (isOnSelect) {
-                    isOnSelect = false;
-                    return;
-                }
-
-                if (!event.target.closest('.popover')) {
-                    const popovers = document.querySelectorAll('.popover');
-                    popovers.forEach((element) => {
-                        element.remove();
-                    });
-                    //Même code que ligne 38
-                    if (eventCreate!=null)
-                    {
-                        eventCreate.remove();
-                        eventCreate=null
-                    }
-                }
-            })
         },
 );
     </script>

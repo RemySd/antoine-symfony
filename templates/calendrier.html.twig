@@ -81,7 +81,18 @@
                                 })
                                 .then((response) => response.json())
                                 .then((data) => {
+
+                                    if (data.status == "error_hours") {
+                                        alert("Trop d'heure on déjà été attribué à cette matière");
+                                    }
+
                                     if (data.status == "ok") {
+                                        console.log(data);
+
+                                        // eventCreate.title = "CLICKED!";
+                                        eventCreate.setProp('title', data['title']);
+                                        calendar.refetchEvents();
+
                                         eventCreate=null;
                                         const popovers = document.querySelectorAll('.popover');
                                         popovers.forEach((element) => {
@@ -93,7 +104,6 @@
                         
                         });
                     isOnSelect = true;
-                    
                 },
             });
             var calendar_buttons={};

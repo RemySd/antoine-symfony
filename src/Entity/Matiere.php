@@ -44,6 +44,11 @@ class Matiere
         return $this->getLibelle();
     }
 
+    public function getFullName(): string 
+    {
+        return $this->getLibelle() . ' - ' . $this->getSpecialite();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
