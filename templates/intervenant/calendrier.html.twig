@@ -101,7 +101,7 @@
                 .then((data) => {                    
                     data.forEach((element) => {
                         calendar.addEvent({
-                            title: element.intervenant.user.firstname + ' ' + element.intervenant.user.lastname + ' - ' + element.idMatiere.libelle + ' - ' + element.idMatiere.specialite,
+                            title: element.idMatiere.intervenant.user.firstname + ' ' + element.idMatiere.intervenant.user.lastname + ' - ' + element.idMatiere.libelle + ' - ' + element.idMatiere.specialite,
                             start: element.dateHeureCourDebut,
                             end: element.dateHeureCourFin,
                             allDay: false // will make the time show
