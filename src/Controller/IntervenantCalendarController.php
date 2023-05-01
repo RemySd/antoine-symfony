@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\CoursRepository;
 use App\Repository\MatiereRepository;
 use App\Repository\IntervenantRepository;
 use Symfony\Component\Security\Core\Security;
@@ -38,11 +39,11 @@ class IntervenantCalendarController extends AbstractController
     }
 
     #[Route('/get-cours', name: 'get_intervenant_cours', methods: ['GET'])]
-    public function getCours(IntervenantRepository $intervenantRepository, Security $security): JsonResponse
+    public function getCours(IntervenantRepository $intervenantRepository, Security $security, CoursRepository $coursRepository): JsonResponse
     {
         $intervenant = $intervenantRepository->findOneBy(['user' => $security->getUser()]);
 
-        return $this->json($intervenant->getCours());
+        return $this->json($coursRepository->getCoursByIntervenants($intervenant));
     }
 
     #[Route('/get-cours-infos', name: 'intervenant_get_cours_infos', methods: ['GET'])]
