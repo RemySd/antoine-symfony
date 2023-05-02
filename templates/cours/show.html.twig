@@ -8,15 +8,11 @@
     <table class="table">
         <tbody>
             <tr>
-                <th>Id_cours</th>
-                <td>{{ cour.idCours }}</td>
-            </tr>
-            <tr>
-                <th>DateHeureCour_debut</th>
+                <th>Heure de début</th>
                 <td>{{ cour.dateHeureCourDebut ? cour.dateHeureCourDebut|date('Y-m-d H:i:s') : '' }}</td>
             </tr>
             <tr>
-                <th>DateHeureCour_fin</th>
+                <th>Heure de fin</th>
                 <td>{{ cour.dateHeureCourFin ? cour.dateHeureCourFin|date('Y-m-d H:i:s') : '' }}</td>
             </tr>
         </tbody>

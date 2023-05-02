@@ -44,9 +44,18 @@
 					</ul>
 					<ul class="navbar-nav ml-auto">
 						<li class="nav-item dropdown" style="margin-right: 75px;">
-							<a class="nav-link dropdown-toggle" href="{{ path('calendrier',{'year': 'now' | date('Y')}) }}" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							{% set year = 'now' | date('Y') %}
+							{% if 'now' | date('m') <= 8 %}
+								{% set year = year - 1 %}
+							{% endif %}
+
+							{% if is_granted('ROLE_ADMIN') %}
+								<a class="nav-link dropdown-toggle" href="{{ path('calendrier',{'year': year})  }}" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							{% endif %}
+
 								<img class="nav-profile-img rounded-circle" src="/images/logo.png">
 							</a>
+
 							<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 								<a class="dropdown-item" href="#">Profile</a>
 								<a class="dropdown-item" href="#">Create Post</a>
