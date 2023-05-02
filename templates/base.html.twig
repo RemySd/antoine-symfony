@@ -53,6 +53,9 @@
 								<a class="nav-link dropdown-toggle" href="{{ path('calendrier',{'year': year})  }}" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 							{% endif %}
 
+							{% if is_granted('ROLE_INTERVENANT') %}
+								<a class="nav-link dropdown-toggle" href="{{ path('app_intervenant_calendar',{'year': year})  }}" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							{% endif %}
 								<img class="nav-profile-img rounded-circle" src="/images/logo.png">
 							</a>
 
